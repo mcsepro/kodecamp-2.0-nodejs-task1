@@ -1,81 +1,45 @@
-
-// Javascript implementation of QuickSort
-
-
-// A utility function to swap two elements
-function swap(arr, i, j) {
-	let temp = arr[i];
-	arr[i] = arr[j];
-	arr[j] = temp;
+var items =[ 234, 43, 55, 63, 5, 6, 235, 547 ];
+function swap(items, leftIndex, rightIndex){
+    var temp = items[leftIndex];
+    items[leftIndex] = items[rightIndex];
+    items[rightIndex] = temp;
+}
+function partition(items, left, right) {
+    var pivot   = items[Math.floor((right + left) / 2)], //middle element
+        i       = left, //left pointer
+        j       = right; //right pointer
+    while (i <= j) {
+        while (items[i] < pivot) {
+            i++;
+        }
+        while (items[j] > pivot) {
+            j--;
+        }
+        if (i <= j) {
+            swap(items, i, j); //sawpping two elements
+            i++;
+            j--;
+        }
+    }
+    return i;
 }
 
-/* This function takes last element as pivot, places
-the pivot element at its correct position in sorted
-array, and places all smaller (smaller than pivot)
-to left of pivot and all greater elements to right
-of pivot */
-function partition(arr, low, high) {
-
-	// pivot
-	let pivot = arr[high];
-
-	// Index of smaller element and
-	// indicates the right position
-	// of pivot found so far
-	let i = (low - 1);
-
-	for (let j = low; j <= high - 1; j++) {
-
-		// If current element is smaller
-		// than the pivot
-		if (arr[j] < pivot) {
-
-			// Increment index of
-			// smaller element
-			i++;
-			swap(arr, i, j);
-		}
-	}
-	swap(arr, i + 1, high);
-	return (i + 1);
+function quickSort(items, left, right) {
+    var index;
+    if (items.length > 1) {
+        index = partition(items, left, right); //index returned from partition
+        if (left < index - 1) { //more elements on the left side of the pivot
+            quickSort(items, left, index - 1);
+        }
+        if (index < right) { //more elements on the right side of the pivot
+            quickSort(items, index, right);
+        }
+    }
+    return items;
 }
-
-/* The main function that implements QuickSort
-		arr[] --> Array to be sorted,
-		low --> Starting index,
-		high --> Ending index
-*/
-function quickSort(arr, low, high) {
-	if (low < high) {
-
-		// pi is partitioning index, arr[p]
-		// is now at right place
-		let pi = partition(arr, low, high);
-
-		// Separately sort elements before
-		// partition and after partition
-		quickSort(arr, low, pi - 1);
-		quickSort(arr, pi + 1, high);
-	}
-
-
-// Function to print an array
-function printArray(arr, size) {
-	for (let i = 0; i < size; i++)
-		document.write(arr[i] + " ");
-
-	document.write("<br>");
-}
-
-// Driver Code
-
-let arr = [ 52, 37, 63, 14, 17, 8, 6, 25 ];
-let n = arr.length;
-
-quickSort(arr, 0, n - 1);
-document.write("Sorted array: <br>");
-printArray(arr, n);
-
+// first call to quick sort
+var sortedArray = quickSort(items, 0, items.length - 1);
+console.log(sortedArray); //print [5, 6, 43, 55, 63, 234, 235, 547]
 
 /* Complexities.
 Time taken by QuickSort, in general, can be written as following. 
@@ -94,4 +58,3 @@ Best Case:
  The best case occurs when the partition process always picks the middle element as pivot. Following is recurrence for best case. 
 
  T(n) = 2T(n/2) + \theta(n)*/
-}
